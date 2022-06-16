@@ -222,10 +222,12 @@ function App() {
   ]);
   const [action, setaction] = useState("");
   const [showDetails, setshowDetails] = useState(false);
+  const [showDeleteModel, setShowDeleteModel] = useState(false);
   const [details, setdetails] = useState(null);
   const [isOpen, setisOpen] = useState(false);
   const [newContaienr, setnewContaienr] = useState(null);
   const [formData, setFormData] = useState({});
+  const [deleteIds, setdeleteIds] = useState("second");
   const [containerYards, setcontainerYards] = useState(
     Array.from({ length: 6 }, (_, index) => index + 1)
   );
@@ -254,7 +256,15 @@ function App() {
     setnewContaienr(formData.id);
   };
   const deleteContaienr = () => {
-    console.log("deleted");
+    let index = 0;
+    allBoxes.map((a, i) => {
+      if (a.id === parseInt(deleteIds)) index = i;
+    });
+    let temp = allBoxes;
+    temp[index] = 0;
+    setallBoxes([...temp]);
+    setdeleteIds("");
+    setShowDeleteModel(false);
   };
   const count = (arr) => {
     let c = 0;
@@ -341,7 +351,7 @@ function App() {
             Add new Container
           </button>
           <button
-            onClick={addContainer}
+            onClick={() => setShowDeleteModel(true)}
             className="btn btn-danger btn-lg button"
           >
             Delete Container
@@ -434,6 +444,26 @@ function App() {
         )}
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setshowDetails(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showDeleteModel} onHide={() => setShowDeleteModel(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Container Details</Modal.Title>
+        </Modal.Header>
+        <Form.Group className="mb-3" controlId="container_delivery_date">
+          <Form.Label>Enter the IDs of the containers to be deleted</Form.Label>
+          <Form.Control
+            type="text"
+            onChange={(e) => setdeleteIds(e.target.value)}
+          />
+          <Button variant="primary" onClick={deleteContaienr}>
+            Delete
+          </Button>
+        </Form.Group>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModel(false)}>
             Close
           </Button>
         </Modal.Footer>
